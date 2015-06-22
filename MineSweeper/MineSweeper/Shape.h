@@ -30,7 +30,7 @@ public :
   Basic_Point(Pos *pos = nullptr, int dim = 2);
   Basic_Point(Basic_Point<Pos> &p);
   ~Basic_Point();
-  Basic_Point<Pos>
+  Basic_Point<Pos> operator=(Basic_Point<Pos> &p);
   virtual void changeAxes(int axe1 = 0, int axe2 = 1);
   virtual void changeDimension(int changeDim = 2);
 };
@@ -75,6 +75,12 @@ Basic_Point<Pos>::~Basic_Point()
 }
 
 template<typename Pos>
+Basic_Point<Pos> Basic_Point<Pos>::operator=(Basic_Point<Pos> &p)
+{
+
+}
+
+template<typename Pos>
 virtual void Basic_Point<Pos>::changeAxes(int axe1, int axe2)
 {
   int currentDim = getDimension();
@@ -105,6 +111,7 @@ virtual void Basic_Point<Pos>::changeDimension(int changeDim)
       position[ind] = 0;
     }
     setDimension(changeDim);
+    delete[] temp;
   }
 }
 
