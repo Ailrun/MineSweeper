@@ -142,6 +142,14 @@ public :
   Basic_Point(const Basic_Point<Pos> &p);
   Basic_Point(const Basic_Point<Pos> &&p);
   virtual ~Basic_Point();
+  virtual Pos &at(const int ind);
+  virtual const Pos &at(const int ind) const;
+  virtual int compare(const Basic_Point<Pos> &p);
+  virtual int compare(const int &dim);
+  virtual void setDimension(const int newDim = 2);
+  virtual void changeAxes(const int axe0 = 0, const int axe1 = 1);
+  virtual Pos begin() const;
+  virtual Pos end() const;
   virtual Basic_Point<Pos> &operator=(const Basic_Point<Pos> &p);
   virtual Basic_Point<Pos> &operator=(const Basic_Point<Pos> &&p);
   virtual Basic_Point<Pos> &operator+=(const Basic_Point<Pos> &p);
@@ -150,15 +158,9 @@ public :
   virtual Basic_Point<Pos> &operator-=(const Basic_Point<Pos> &&p);
   virtual Basic_Point<Pos> &operator*=(const Pos &m);
   virtual Basic_Point<Pos> &operator/=(const Pos &d);
-  virtual Pos &operator[](const int ind);
-  virtual const Pos &operator[](const int ind) const;
-  virtual const Pos begin() const;
-  virtual const Pos end() const;
-  virtual int compare(const Basic_Point<Pos> &p);
-  virtual void setDimension(const int newDim = 2);
-  virtual void changeAxes(const int axe0 = 0, const int axe1 = 1);
 
-
+  friend Pos &operator[](const Basic_Point<Pos> &obj, const int ind);
+  friend const Pos &operator[](const Basic_Point<Pos> &obj, const int ind);
   friend bool operator==(const Basic_Point<Pos> &left, const Basic_Point<Pos> &right);
   friend bool operator!=(const Basic_Point<Pos> &left, const Basic_Point<Pos> &right);
   friend Basic_Point<Pos> operator-(const Basic_Point<Pos> &p);
