@@ -1,11 +1,11 @@
 #ifndef BUTTON_H_
 #define BUTTON_H_
-#include 
+#include "Type.h"
 
 class Button
 {
 private :
-  Position_T x, y; //Do NOT use type specific function. use 
+  Num_T x, y; //Do NOT use type specific function. use 
 
 };
 
