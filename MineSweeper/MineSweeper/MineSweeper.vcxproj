@@ -85,6 +85,9 @@
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Type.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="AnyClassProblem.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
