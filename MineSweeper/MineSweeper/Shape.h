@@ -15,8 +15,8 @@ public :
   Basic_Shape(const int dim = 2){ dimension = (dim > 0) ? dim : 1; }
   virtual ~Basic_Shape();
   int getDimension(void) const { return dimension; }
-  virtual int compare(const Basic_Shape &s) const;
-  virtual int compare(const int &dim) const;
+  virtual int compare(const Basic_Shape &s) const { return dimension - s.dimension; }
+  virtual int compare(const int &dim) const { return dimension - dim; }
   virtual void setDimension(const int newDim = 2){ dimension = (newDim > 0) ? newDim : 1; }
   virtual void changeAxes(const int axe0 = 0, const int axe1 = 1) = 0;
 
@@ -44,16 +44,8 @@ public :
 //--Definition
 
 //Basic_Shape_Member_Function
-int Basic_Shape::compare(const Basic_Shape &s) const
-{
-  return dimension - s.dimension;
-}
-int Basic_Shape::compare(const int &dim) const
-{
-  return dimension - dim;
-}
 
-//Basic_Shape_Operator
+//Basic_Shape_Operator_Compare
 inline bool operator==(const Basic_Shape &left, const Basic_Shape &right)
 {
   return (left.compare(right) == 0);
@@ -150,6 +142,8 @@ public :
   virtual void changeAxes(const int axe0 = 0, const int axe1 = 1);
   virtual Pos begin() const;
   virtual Pos end() const;
+  virtual Pos &operator[](const int ind);
+  virtual const Pos &operator[](const int ind) const;
   virtual Basic_Point<Pos> &operator=(const Basic_Point<Pos> &p);
   virtual Basic_Point<Pos> &operator=(const Basic_Point<Pos> &&p);
   virtual Basic_Point<Pos> &operator+=(const Basic_Point<Pos> &p);
@@ -159,12 +153,10 @@ public :
   virtual Basic_Point<Pos> &operator*=(const Pos &m);
   virtual Basic_Point<Pos> &operator/=(const Pos &d);
 
-  friend Pos &operator[](const Basic_Point<Pos> &obj, const int ind);
-  friend const Pos &operator[](const Basic_Point<Pos> &obj, const int ind);
   friend bool operator==(const Basic_Point<Pos> &left, const Basic_Point<Pos> &right);
   friend bool operator!=(const Basic_Point<Pos> &left, const Basic_Point<Pos> &right);
   friend Basic_Point<Pos> operator-(const Basic_Point<Pos> &p);
-  friend Basic_Point<Pos> operator-(const Basic_Point<Pos> &p);
+  friend Basic_Point<Pos> operator-(Basic_Point<Pos> &&p);
   friend Basic_Point<Pos> operator+(const Basic_Point<Pos> &left, const Basic_Point<Pos> &right);
   friend Basic_Point<Pos> operator+(Basic_Point<Pos> &&left, const Basic_Point<Pos> &right);
   friend Basic_Point<Pos> operator+(const Basic_Point<Pos> &left, Basic_Point<Pos> &&right);
@@ -225,7 +217,49 @@ Basic_Point<Pos>::~Basic_Point()
   }
 }
 
-//Basic_Point_Assign_Operator
+//Basic_Point_Member_Function
+template<typename Pos>
+virtual void Basic_Point<Pos>::setDimension(const int newDim)
+{
+  const int dim = getDimension();
+  if (dim != newDim)
+  {
+    int minDim = (dim < newDim) ? dim : newDim;
+    Pos *temp = position;
+    position = new Pos[newDim];
+    for (int ind = 0; ind < minDim; ind++)
+    {
+      position[ind] = temp[ind];
+    }
+    // when getDimension() > changeDim, this area does not work
+    for (int ind = minDim; ind < newDim; ind++)
+    {
+      position[ind] = 0;
+    }
+    delete[] temp;
+    Basic_Shape::setDimension(newDim);
+  }
+}
+
+template<typename Pos>
+virtual void Basic_Point<Pos>::changeAxes(const int axe0, const int axe1)
+{
+  const int dim = getDimension();
+  if (axe1 != axe0 &&
+    axe0 > -1 && axe0 < dim &&
+    axe1 < dim && axe1 > -1)
+  {
+    Pos temp = position[axe0];
+    position[axe0] = position[axe1];
+    position[axe1] = temp;
+  }
+  else
+  {
+    throw std::invalid_argument("Invalid argument in axe0 / axe1 of changeAxes");
+  }
+}
+
+//Basic_Point_Operator_Assign
 template<typename Pos>
 Basic_Point<Pos> &Basic_Point<Pos>::operator=(const Basic_Point<Pos> &p)
 {
@@ -276,7 +310,7 @@ Basic_Point<Pos> &Basic_Point<Pos>::operator+=(const Basic_Point<Pos> &p)
 }
 
 template<typename Pos>
-Basic_Point<Pos> &operator+=(const Basic_Point<Pos> &&p)
+Basic_Point<Pos> &Basic_Point<Pos>::operator+=(const Basic_Point<Pos> &&p)
 {
   if (Basic_Shape::operator==(p))
   {
@@ -309,42 +343,42 @@ Basic_Point<Pos> &operator+=(const Basic_Point<Pos> &&p)
 }
 
 template<typename Pos>
-Basic_Point<Pos> &operator-=(const Basic_Point<Pos> &p)
+Basic_Point<Pos> &Basic_Point<Pos>::operator-=(const Basic_Point<Pos> &p)
 {
   return this;
 }
 
 template<typename Pos>
-Basic_Point<Pos> &operator-=(const Basic_Point<Pos> &&p)
+Basic_Point<Pos> &Basic_Point<Pos>::operator-=(const Basic_Point<Pos> &&p)
 {
   return this;
 }
 
 template<typename Pos>
-Basic_Point<Pos> &operator*=(const Pos &m)
+Basic_Point<Pos> &Basic_Point<Pos>::operator*=(const Pos &m)
 {
   return this;
 }
 
 template<typename Pos>
-Basic_Point<Pos> &operator/=(const Pos &d)
+Basic_Point<Pos> &Basic_Point<Pos>::operator/=(const Pos &d)
 {
   return this;
 }
 
-//Basic_Point_Arithmetic_Operator
+//Basic_Point_Operator_Arithmetic
 template<typename Pos>
-Basic_Point<Pos> operator-(void) const
+Basic_Point<Pos> operator-(Basic_Point<Pos> &p)
 {
-  const int dim = getDimension();
+  const int dim = p.getDimension();
   Basic_Point<Pos> minus(nullptr, dim);
   for (int ind = 0; ind < dim; ind++)
   {
-    minus.position[ind] = -position[ind];
+    minus.position[ind] = -p.position[ind];
   }
   return minus;
 }
-
+/*
 template<typename Pos>
 Basic_Point<Pos> operator+(const Basic_Point<Pos> &p) const
 {
@@ -395,49 +429,7 @@ bool operator==(const Basic_Point<Pos> &p) const;
 
 template<typename Pos>
 bool operator!=(const Basic_Point<Pos> &p) const;
-
-//Basic_Point_Member_Function
-template<typename Pos>
-virtual void Basic_Point<Pos>::setDimension(const int newDim)
-{
-  const int dim = getDimension();
-  if (dim != newDim)
-  {
-    int minDim = (dim < newDim) ? dim : newDim;
-    Pos *temp = position;
-    position = new Pos[newDim];
-    for (int ind = 0; ind < minDim; ind++)
-    {
-      position[ind] = temp[ind];
-    }
-    // when getDimension() > changeDim, this area does not work
-    for (int ind = minDim; ind < newDim; ind++)
-    {
-      position[ind] = 0;
-    }
-    delete[] temp;
-    Basic_Shape::setDimension(newDim);
-  }
-}
-
-template<typename Pos>
-virtual void Basic_Point<Pos>::changeAxes(const int axe0, const int axe1)
-{
-  const int dim = getDimension();
-  if (axe1 != axe0 &&
-    axe0 > -1 && axe0 < dim &&
-    axe1 < dim && axe1 > -1)
-  {
-    Pos temp = position[axe0];
-    position[axe0] = position[axe1];
-    position[axe1] = temp;
-  }
-  else
-  {
-    throw std::invalid_argument("Invalid argument in axe0 / axe1 of changeAxes");
-  }
-}
-
+*/
 
 //Basic_Line class template
 //----Declaration
@@ -501,7 +493,7 @@ Basic_Plane<Pos>::Basic_Plane(const Basic_Point<Pos> &p0, const Basic_Point<Pos>
 }
 
 template<typename Pos>
-bool Basic_Plane<Pos>::isContain(const Basic_Point<Pos> p)
+bool Basic_Plane<Pos>::isContain(const Basic_Point<Pos> &p)
 {
   return true;
 }

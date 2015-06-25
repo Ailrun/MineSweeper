@@ -1,7 +1,7 @@
 #include "MineTable.h"
 
 
-MineTable::MineTable()
+MineTable::MineTable(Num_T x, Num_T y)
 {
 }
 
