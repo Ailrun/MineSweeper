@@ -13,11 +13,11 @@ private :
   virtual void initializing();
   virtual void getInput(Num_T &x, Num_T &y);
   virtual void putOutput(Num_T &x, Num_T &y);
-public :
-  CUI();
-  virtual ~CUI(void);
   virtual void clickButton(Num_T &x, Num_T &y);
   virtual void clickStart(bool &isStart);
+public :
+  CUI(void);
+  virtual ~CUI(void);
   virtual void getBuffer(void);
   virtual void drawBuffer(void);
 };
