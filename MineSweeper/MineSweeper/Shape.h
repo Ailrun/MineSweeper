@@ -3,6 +3,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <typeinfo>
 
 //Shape class template : abstract class
 //----Declaration
@@ -13,31 +14,12 @@ private :
   int dimension;
 public :
   Basic_Shape(const int dim = 2){ dimension = (dim > 0) ? dim : 1; }
-  virtual ~Basic_Shape();
+  virtual ~Basic_Shape(void);
   int getDimension(void) const { return dimension; }
   virtual int compare(const Basic_Shape &s) const { return dimension - s.dimension; }
   virtual int compare(const int &dim) const { return dimension - dim; }
   virtual void setDimension(const int newDim = 2){ dimension = (newDim > 0) ? newDim : 1; }
   virtual void changeAxes(const int axe0 = 0, const int axe1 = 1) = 0;
-
-  friend inline bool operator==(const Basic_Shape &left, const Basic_Shape &right);
-  friend inline bool operator==(const int &left, const Basic_Shape &right);
-  friend inline bool operator==(const Basic_Shape &left, const int &right);
-  friend inline bool operator!=(const Basic_Shape &left, const Basic_Shape &right);
-  friend inline bool operator!=(const int &left, const Basic_Shape &right);
-  friend inline bool operator!=(const Basic_Shape &left, const int &right);
-  friend inline bool operator>(const Basic_Shape &left, const Basic_Shape &right);
-  friend inline bool operator>(const Basic_Shape &left, const Basic_Shape &right);
-  friend inline bool operator>(const Basic_Shape &left, const Basic_Shape &right);
-  friend inline bool operator>=(const Basic_Shape &left, const Basic_Shape &right);
-  friend inline bool operator>=(const int &left, const Basic_Shape &right);
-  friend inline bool operator>=(const Basic_Shape &left, const int &right);
-  friend inline bool operator<(const Basic_Shape &left, const Basic_Shape &right);
-  friend inline bool operator<(const int &left, const Basic_Shape &right);
-  friend inline bool operator<(const Basic_Shape &left, const int &right);
-  friend inline bool operator<=(const Basic_Shape &left, const Basic_Shape &right);
-  friend inline bool operator<=(const int &left, const Basic_Shape &right);
-  friend inline bool operator<=(const Basic_Shape &left, const int &right);
 };
 
 //Basic_Shape class template
@@ -58,10 +40,9 @@ inline bool operator==(const Basic_Shape &left, const int &right)
 {
   return (left.compare(right) == 0);
 }
-
 inline bool operator!=(const Basic_Shape &left, const Basic_Shape &right)
 {
-  return !(left==right);
+  return !(left == right);
 }
 inline bool operator!=(const int &left, const Basic_Shape &right)
 {
@@ -70,54 +51,6 @@ inline bool operator!=(const int &left, const Basic_Shape &right)
 inline bool operator!=(const Basic_Shape &left, const int &right)
 {
   return !(left == right);
-}
-inline bool operator>(const Basic_Shape &left, const Basic_Shape &right)
-{
-  return (left.compare(right) > 0);
-}
-inline bool operator>(const int &left, const Basic_Shape &right)
-{
-  return (right.compare(right) < 0);
-}
-inline bool operator>(const Basic_Shape &left, const int &right)
-{
-  return (left.compare(right) > 0);
-}
-inline bool operator>=(const Basic_Shape &left, const Basic_Shape &right)
-{
-  return !(left.compare(right) < 0);
-}
-inline bool operator>=(const int &left, const Basic_Shape &right)
-{
-  return !(right.compare(left) > 0);
-}
-inline bool operator>=(const Basic_Shape &left, const int &right)
-{
-  return !(left.compare(right) < 0);
-}
-inline bool operator<(const Basic_Shape &left, const Basic_Shape &right)
-{
-  return (right>left);
-}
-inline bool operator<(const int &left, const Basic_Shape &right)
-{
-  return (right>left);
-}
-inline bool operator<(const Basic_Shape &left, const int &right)
-{
-  return (right>left);
-}
-inline bool operator<=(const Basic_Shape &left, const Basic_Shape &right)
-{
-  return (right>=left);
-}
-inline bool operator<=(const int &left, const Basic_Shape &right)
-{
-  return (right >= left);
-}
-inline bool operator<=(const Basic_Shape &left, const int &right)
-{
-  return (right >= left);
 }
 
 
@@ -133,15 +66,13 @@ public :
   Basic_Point(const Pos *pos = nullptr, const int dim = 2);
   Basic_Point(const Basic_Point<Pos> &p);
   Basic_Point(const Basic_Point<Pos> &&p);
-  virtual ~Basic_Point();
-  virtual Pos &at(const int ind);
-  virtual const Pos &at(const int ind) const;
-  virtual int compare(const Basic_Point<Pos> &p);
-  virtual int compare(const int &dim);
+  virtual ~Basic_Point(void);
+  virtual int compare(const Basic_Shape &s) const;
+  virtual int compare(const int &dim) const;
   virtual void setDimension(const int newDim = 2);
   virtual void changeAxes(const int axe0 = 0, const int axe1 = 1);
-  virtual Pos begin() const;
-  virtual Pos end() const;
+  virtual Pos begin(void) const;
+  virtual Pos end(void) const;
   virtual Pos &operator[](const int ind);
   virtual const Pos &operator[](const int ind) const;
   virtual Basic_Point<Pos> &operator=(const Basic_Point<Pos> &p);
@@ -153,8 +84,6 @@ public :
   virtual Basic_Point<Pos> &operator*=(const Pos &m);
   virtual Basic_Point<Pos> &operator/=(const Pos &d);
 
-  friend bool operator==(const Basic_Point<Pos> &left, const Basic_Point<Pos> &right);
-  friend bool operator!=(const Basic_Point<Pos> &left, const Basic_Point<Pos> &right);
   friend Basic_Point<Pos> operator-(const Basic_Point<Pos> &p);
   friend Basic_Point<Pos> operator-(Basic_Point<Pos> &&p);
   friend Basic_Point<Pos> operator+(const Basic_Point<Pos> &left, const Basic_Point<Pos> &right);
@@ -209,7 +138,7 @@ Basic_Point<Pos>::Basic_Point(const Basic_Point<Pos> &&p) : Basic_Shape(p)
 
 //Basic_Point_Destructor
 template<typename Pos>
-Basic_Point<Pos>::~Basic_Point()
+Basic_Point<Pos>::~Basic_Point(void)
 {
   if (position != nullptr)
   {
@@ -218,6 +147,23 @@ Basic_Point<Pos>::~Basic_Point()
 }
 
 //Basic_Point_Member_Function
+template<typename Pos>
+virtual int Basic_Point<Pos>::compare(const Basic_Shape &s) const
+{
+  if (typeid(*this).name() == typeid(s).name())
+  {
+    for (int ind = 0; ind < dimension; ind++)
+    {
+      (position[ind] == (dynamic_cast<Basic_Point<Pos>>s).position[ind]) && return (position[ind] - (dynamic_cast<Basic_Point<Pos>>s).position[ind]);
+    }
+    return dimension - s.dimension;
+  }
+  else
+  {
+    return s.compare(*this);
+  }
+}
+
 template<typename Pos>
 virtual void Basic_Point<Pos>::setDimension(const int newDim)
 {

@@ -1,0 +1,10 @@
+MineTable class must give these values.
+
+1. by using two parameter Num_T x, Num_T y, the class returns state of button at that position.
+2. by using no parameter, the class returns time after starting game.
+3. by using no parameter, the class returns game is ended or not
+
+UI class must give these values to MineTable (Other word, MineTable class must use these values as input)
+
+1. by clicking, the class gives position of valid button
+2. by clicking, the class gives whether start button is clicked.

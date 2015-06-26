@@ -11,7 +11,7 @@ private :
   Button *buttons;
 public :
   MineTable(Num_T x, Num_T y);
-  ~MineTable();
+  virtual ~MineTable(void);
   void randomMine(int seed);
   void giveInputToBtn(Num_T x, Num_T y, Click_T input);
   Num_T leftMine(void);
