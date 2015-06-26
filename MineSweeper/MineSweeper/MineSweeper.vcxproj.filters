@@ -24,6 +24,9 @@
     <ClCompile Include="MineTable.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h">
@@ -38,9 +41,18 @@
     <ClInclude Include="Type.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="CUI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="AnyClassProblem.txt">
+      <Filter>토론</Filter>
+    </Text>
+    <Text Include="ClassRequirement.txt">
       <Filter>토론</Filter>
     </Text>
   </ItemGroup>
