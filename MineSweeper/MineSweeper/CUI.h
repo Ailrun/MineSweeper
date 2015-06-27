@@ -1,25 +1,39 @@
 #ifndef CUI_H_
 #define CUI_H_
+#ifndef UITypeYPE_GUI
+
 #include "UI.h"
+#include <iostream>
 
-class CUI_Buffer : public Buffer
+class CUIType
 {
+public :
+  typedef char DispType;
+};
 
+class CUIBuffer : public Buffer
+{
+private :
+  std::ostream &outputStream;
+  CUIType::DispType *buffer;
+  inline GlobalType::NumType getIndex(const GlobalType::NumType &x, const GlobalType::NumType &y) const;
+public :
+  CUIBuffer(const GlobalType::NumType &x, const GlobalType::NumType &y, std::ostream &os);
+  ~CUIBuffer(void);
+  virtual void draw(void) const;
+  virtual void setValue(const GlobalType::NumType &x, const GlobalType::NumType &y, const CUIType::DispType &val);
 };
 
 class CUI :public UI
 {
-private :
-  virtual void initializing();
-  virtual void getInput(Num_T &x, Num_T &y);
-  virtual void putOutput(Num_T &x, Num_T &y);
-  virtual void clickButton(Num_T &x, Num_T &y);
-  virtual void clickStart(bool &isStart);
 public :
   CUI(void);
   virtual ~CUI(void);
-  virtual void getBuffer(void);
+  virtual void initializing(MineTable &mt);
+  virtual void giveInput(MineTable &mt); // all are output
+  virtual void fillBuffer(const MineTable &mt);
   virtual void drawBuffer(void);
 };
 
+#endif
 #endif

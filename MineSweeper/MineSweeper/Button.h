@@ -5,8 +5,7 @@
 class Button
 {
 private :
-  Num_T x, y; //Do NOT use type specific function. use 
-
+  GlobalType::NumType x, y; //Do NOT use type specific function. Use only GlobalType class function.
 };
 
 #endif

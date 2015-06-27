@@ -201,7 +201,7 @@ virtual void Basic_Point<Pos>::changeAxes(const int axe0, const int axe1)
   }
   else
   {
-    throw std::invalid_argument("Invalid argument in axe0 / axe1 of changeAxes");
+    throw std::invalid_argument("Invalid argument in axe0 / axe1 of Basic_Point<Pos>::changeAxes");
   }
 }
 

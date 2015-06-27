@@ -6,16 +6,16 @@
 class MineTable
 {
 private :
-  Num_T xLen, yLen;
-  Num_T mineNum;
+  GlobalType::NumType xLen, yLen;
+  GlobalType::NumType mineNum;
   Button *buttons;
 public :
-  MineTable(Num_T x, Num_T y);
+  MineTable(GlobalType::NumType x = 20, GlobalType::NumType y = 20);
   virtual ~MineTable(void);
   void randomMine(int seed);
-  void giveInputToBtn(Num_T x, Num_T y, Click_T input);
-  Num_T leftMine(void);
-  Num_T timer(void);
+  void giveInputToBtn(GlobalType::NumType x, GlobalType::NumType y, GlobalType::ClickType input);
+  GlobalType::NumType leftMine(void);
+  GlobalType::NumType timer(void);
 };
 
 #endif
