@@ -1,10 +1,31 @@
-MineTable class must give these values.
+## UI & MineTable Communication
+
+MineTable class must give these values. In other word, the class must have methods that return these values.
 
 1. by using two parameter Num_T x, Num_T y, the class returns state of button at that position.
 2. by using no parameter, the class returns time after starting game.
 3. by using no parameter, the class returns game is ended or not
 
-UI class must give these values to MineTable (Other word, MineTable class must use these values as input)
+UI class must give these values to MineTable (In other word, MineTable class must use these values as input)
 
-1. by clicking, the class gives position of valid button
-2. by clicking, the class gives whether start button is clicked.
+1. From input, the class gives position of valid button
+2. From input, the class gives whether start button is clicked.
+3. From input, the class gives whether end button is clicked.
+
+
+## Communication process
+
+1. UI get some input from User.
+2. UI give this value as valid button form to MineTable.
+3. MineTable check and use valid button input.
+4. MineTable return states of game and each button.
+5. UI get these output from MineTable.
+6. UI set Buffer value from output.
+7. Buffer draw screen to User.
+
+## dividing UI
+
+1. UIInput get some input from User. (InputType)
+2. UIConverter give this value as valid button form to MineTable. (MineInputType)
+3. UIConverter get MineTable output and change to Buffer type.
+4. UIOutput give this output to Buffer.
